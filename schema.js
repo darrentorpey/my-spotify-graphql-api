@@ -1,7 +1,11 @@
 exports.typeDefs = `
   type Query {
     playlists: [Playlist]
-    tracks(startsWith: String, having: TrackFilter): [Track]
+    tracks(
+      startsWith: String
+      having: TrackFilter
+      title: String
+    ): [Track]
   }
 
   input TrackFilter {

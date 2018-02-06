@@ -8,6 +8,21 @@ function audioFilter(property, value) {
   return track => track.audio_features && track.audio_features[property] >= value
 }
 
+function nameMatches(name, target) {
+  const matches = target.match(/%(.*)%/)
+  const matchTarget = matches && matches[1]
+
+  if (matchTarget) {
+    return name.toLowerCase().includes(matchTarget.toLowerCase())
+  }
+
+  return name === target
+}
+
+function titleFilter(title) {
+  return track => nameMatches(track.name, title)
+}
+
 function applyFilters(tracks, filters) {
   return tracks.filter(track => {
     for (filter of filters) {
@@ -20,29 +35,38 @@ function applyFilters(tracks, filters) {
   })
 }
 
-function getTracks(having) {
-  let tracks = compound(playlists.map(p => p.tracks ?
-    p.tracks.map(track => Object.assign(track, { playlists: [p.name] })) : p.tracks))
-
+function filterTracks(tracks, { startsWith, having, title }) {
   const filters = []
+
   for (prop in having) {
     filters.push(audioFilter(prop, having[prop]))
   }
-
-  // Apply filters
-  tracks = applyFilters(tracks, filters)
-
-  return tracks
-}
-
-function resolveTracks(root, { startsWith, having }) {
-  let tracks = getTracks(having)
 
   if (startsWith) {
     tracks = tracks.filter(track => track.name.startsWith(startsWith))
   }
 
-  return tracks
+  if (title) {
+    filters.push(titleFilter(title.trim()))
+  }
+
+  return applyFilters(tracks, filters)
+}
+
+function getTracks(startsWith, having, title) {
+  return compound(playlists.map(p =>
+    p.tracks
+    ? p.tracks.map(track => Object.assign(track, { playlists: [p.name] }))
+    : p.tracks)
+  )
+}
+
+function resolveTracks(root, { startsWith, having, title }) {
+  const tracks = getTracks(startsWith, having, title)
+
+  const filteredTracks = filterTracks(tracks, { startsWith, having, title })
+
+  return filteredTracks
 }
 
 function afLabelCoarse(afValue) {
@@ -82,7 +106,6 @@ function afLabelMedium(afValue) {
 }
 
 function afLabel(afValue, granularity = 'COARSE') {
-  console.log('!! granularity', granularity)
   if (granularity !== 'COARSE' && granularity !== 'MEDIUM') {
     throw Error('unknown granularity')
   }
