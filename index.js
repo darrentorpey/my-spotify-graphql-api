@@ -1,25 +1,13 @@
-const {buildSchema} = require('graphql')
 const server = require('express-graphql')
 const CORS = require('micro-cors')()
+const { makeExecutableSchema } = require('graphql-tools')
 
-const playlists = require('./data/playlists.json')
+const { typeDefs } = require('./schema')
+const resolvers = require('./resolvers')
 
-const schema = buildSchema(`
-  type Query {
-    hello: String
-    playlists: [Playlist]
-  }
+const schema = makeExecutableSchema({
+  typeDefs,
+  resolvers
+})
 
-  type Playlist {
-    name: String
-  }
-`)
-
-console.log('playlists[1]', playlists[1])
-
-const rootValue = {
-  hello: () => 'Your Playlists',
-  playlists: () => playlists,
-}
-
-module.exports = CORS(server({ schema, rootValue }))
+module.exports = CORS(server({ schema }))

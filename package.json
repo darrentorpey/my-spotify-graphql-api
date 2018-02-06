@@ -1,12 +1,19 @@
 {
   "name": "graphql-api",
-  "scripts": {
-    "start": "micro index.js"
-  },
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
     "express-graphql": "0.6.11",
     "graphql": "0.12.3",
+    "graphql-tools": "2.19.0",
     "micro": "9.1.0",
     "micro-cors": "0.1.0"
+  },
+  "scripts": {
+    "start": "micro index.js",
+    "dev": "micro-dev"
+  },
+  "devDependencies": {
+    "micro-dev": "2.2.0"
   }
 }
