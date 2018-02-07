@@ -1,6 +1,6 @@
-const { compact, flatten, uniqBy } = require('lodash')
+import { compact, flatten, uniqBy } from 'lodash-es'
 
-const playlists = require('./data/playlists.json')
+import playlists from './data/playlists.json'
 
 const compound = items => uniqBy(compact(flatten(items)), 'id')
 
@@ -25,7 +25,7 @@ function titleFilter(title) {
 
 function applyFilters(tracks, filters) {
   return tracks.filter(track => {
-    for (filter of filters) {
+    for (let filter of filters) {
       if (!filter(track)) {
         return false
       }
@@ -38,7 +38,7 @@ function applyFilters(tracks, filters) {
 function filterTracks(tracks, { startsWith, having, title }) {
   const filters = []
 
-  for (prop in having) {
+  for (let prop in having) {
     filters.push(audioFilter(prop, having[prop]))
   }
 
@@ -148,4 +148,4 @@ const resolvers = {
   }
 }
 
-module.exports = resolvers
+export default resolvers

@@ -1,13 +1,5 @@
-const server = require('express-graphql')
-const CORS = require('micro-cors')()
-const { makeExecutableSchema } = require('graphql-tools')
+const requireEsm = require('@std/esm')(module, { esm: 'js' })
 
-const { typeDefs } = require('./schema')
-const resolvers = require('./resolvers')
+const server = requireEsm('./src/server').default
 
-const schema = makeExecutableSchema({
-  typeDefs,
-  resolvers
-})
-
-module.exports = CORS(server({ schema }))
+module.exports = server

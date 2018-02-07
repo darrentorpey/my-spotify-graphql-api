@@ -1,4 +1,4 @@
-exports.typeDefs = `
+export default `
   type Query {
     playlists: [Playlist]
     tracks(
@@ -6,11 +6,16 @@ exports.typeDefs = `
       having: TrackFilter
       title: String
     ): [Track]
+    lyrics(url: String): [LyricSheet]
   }
 
   input TrackFilter {
     danceability: Float
     valence: Float
+  }
+
+  type LyricSheet {
+    text: String
   }
 
   """
