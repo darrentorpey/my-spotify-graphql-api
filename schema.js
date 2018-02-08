@@ -6,7 +6,7 @@ export default `
       having: TrackFilter
       title: String
     ): [Track]
-    lyrics(url: String): [LyricSheet]
+    lyric_sheet(url: String): LyricSheet
   }
 
   input TrackFilter {

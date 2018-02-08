@@ -9,7 +9,8 @@
     "graphql-tools": "2.20.1",
     "lodash-es": "4.17.5",
     "micro": "9.1.0",
-    "micro-cors": "0.1.0"
+    "micro-cors": "0.1.0",
+    "scraperjs": "1.2.0"
   },
   "scripts": {
     "start": "micro index.js",
