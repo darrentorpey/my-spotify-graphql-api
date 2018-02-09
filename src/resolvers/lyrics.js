@@ -1,9 +1,18 @@
+import striptags from 'striptags'
+
 import { scrapeUrl } from '../scraper.js'
 
 const songs = {
   'http://www.songlyrics.com/destroyer/your-blood-lyrics/': `
 hello, I love you
   `
+}
+
+function cleanLyricsText(rawHtml) {
+  return striptags(rawHtml, '<br>')
+    .replace(/<br>\n/g, '\n')
+    .replace(/( ){2,8}/g, ' ')
+    .trim()
 }
 
 async function scrapeLyrics(url) {
@@ -21,8 +30,12 @@ async function scrapeLyrics(url) {
   const geniusLyricsDiv = $('.lyrics')
 
   if (geniusLyricsDiv.length) {
+    const rawHtml = geniusLyricsDiv.html()
+
+    const stripped = cleanLyricsText(rawHtml)
+
     return {
-      content: geniusLyricsDiv.html(),
+      content: stripped,
       title: 'not available yet'
     }
   }
@@ -30,13 +43,13 @@ async function scrapeLyrics(url) {
   throw Error('could not find lyrics')
 }
 
-async function resolveTracks(root, { url }) {
+async function resolveLyrics(root, { url }) {
   const lyricsResponse = await scrapeLyrics(url)
 
-  console.log(`lyricsResponse`, lyricsResponse)
+  // console.log(`lyricsResponse`, lyricsResponse)
   return {
     text: lyricsResponse.content
   }
 }
 
-export default resolveTracks
+export default resolveLyrics
