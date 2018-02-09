@@ -3,9 +3,10 @@ import striptags from 'striptags'
 import { scrapeUrl } from '../scraper.js'
 
 const songs = {
-  'http://www.songlyrics.com/destroyer/your-blood-lyrics/': `
-hello, I love you
-  `
+  '2Z1QZn3LGA3G0NsXdZ5NUY': [
+    'http://www.songlyrics.com/destroyer/your-blood-lyrics/',
+    'https://genius.com/Destroyer-your-blood-lyrics',
+  ],
 }
 
 function cleanLyricsText(rawHtml) {
@@ -23,7 +24,10 @@ async function scrapeLyrics(url) {
   if (songLyricsDiv.length) {
     return {
       content: $('#songLyricsDiv').html(),
-      title: $('.pagetitle h1').html().replace(' Lyrics', '')
+      title: $('.pagetitle h1')
+        .html()
+        .replace(' Lyrics', ''),
+      source: 'songlyrics.com',
     }
   }
 
@@ -36,20 +40,35 @@ async function scrapeLyrics(url) {
 
     return {
       content: stripped,
-      title: 'not available yet'
+      title: 'not available yet',
+      source: 'genius.com',
     }
   }
 
   throw Error('could not find lyrics')
 }
 
-async function resolveLyrics(root, { url }) {
+export async function resolveLyrics(root, { url, id } = {}) {
+  if (id) {
+    url = songs[id]
+  }
+
   const lyricsResponse = await scrapeLyrics(url)
 
   // console.log(`lyricsResponse`, lyricsResponse)
   return {
-    text: lyricsResponse.content
+    text: lyricsResponse.content,
   }
 }
 
-export default resolveLyrics
+export async function resolveLyricSheets(root, { id }) {
+  const urls = songs[id]
+
+  const lyricSheets = await Promise.all(urls.map(url => scrapeLyrics(url)))
+
+  return lyricSheets.map(sheet => ({
+    text: sheet.content,
+    title: sheet.title,
+    source: sheet.source,
+  }))
+}

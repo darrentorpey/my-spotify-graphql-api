@@ -2,7 +2,7 @@ import { compact, flatten, uniqBy } from 'lodash-es'
 
 import playlists from './data/playlists.json'
 
-import resolveLyrics from './src/resolvers/lyrics'
+import { resolveLyrics, resolveLyricSheets } from './src/resolvers/lyrics'
 
 const compound = items => uniqBy(compact(flatten(items)), 'id')
 
@@ -27,7 +27,7 @@ function titleFilter(title) {
 
 function applyFilters(tracks, filters) {
   return tracks.filter(track => {
-    for (let filter of filters) {
+    for (const filter of filters) {
       if (!filter(track)) {
         return false
       }
@@ -40,7 +40,7 @@ function applyFilters(tracks, filters) {
 function filterTracks(tracks, { startsWith, having, title }) {
   const filters = []
 
-  for (let prop in having) {
+  for (const prop in having) {
     filters.push(audioFilter(prop, having[prop]))
   }
 
@@ -56,10 +56,8 @@ function filterTracks(tracks, { startsWith, having, title }) {
 }
 
 function getTracks(startsWith, having, title) {
-  return compound(playlists.map(p =>
-    p.tracks
-    ? p.tracks.map(track => Object.assign(track, { playlists: [p.name] }))
-    : p.tracks)
+  return compound(
+    playlists.map(p => (p.tracks ? p.tracks.map(track => Object.assign(track, { playlists: [p.name] })) : p.tracks))
   )
 }
 
@@ -121,7 +119,7 @@ function afLabel(afValue, granularity = 'COARSE') {
   }
 }
 
-const audioFeaturesFieldResolver = (feature) => (audio_features, args, context) => {
+const audioFeaturesFieldResolver = feature => (audio_features, args, context) => {
   const { afGranularity } = context
 
   return afLabel(audio_features[feature], afGranularity)
@@ -132,13 +130,14 @@ const resolvers = {
     playlists: () => playlists,
     tracks: resolveTracks,
     lyric_sheet: resolveLyrics,
+    lyric_sheets: resolveLyricSheets,
   },
   Track: {
     audio_features_summary: (track, args, context) => {
       context.afGranularity = args.granularity
 
       return track.audio_features
-    }
+    },
   },
   AudioFeaturesSummary: {
     danceability: audioFeaturesFieldResolver('danceability'),
@@ -148,7 +147,7 @@ const resolvers = {
     liveness: audioFeaturesFieldResolver('liveness'),
     valence: audioFeaturesFieldResolver('valence'),
     tempo: audioFeaturesFieldResolver('tempo'),
-  }
+  },
 }
 
 export default resolvers

@@ -6,7 +6,8 @@ export default `
       having: TrackFilter
       title: String
     ): [Track]
-    lyric_sheet(url: String): LyricSheet
+    lyric_sheet(url: String, id: String): LyricSheet
+    lyric_sheets(id: String): [LyricSheet]
   }
 
   input TrackFilter {
@@ -16,6 +17,8 @@ export default `
 
   type LyricSheet {
     text: String
+    title: String
+    source: String
   }
 
   """

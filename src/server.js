@@ -7,7 +7,7 @@ import resolvers from '../resolvers'
 
 const schema = GraphQlTools.makeExecutableSchema({
   typeDefs,
-  resolvers
+  resolvers,
 })
 
 export default CORS()(server({ schema }))
