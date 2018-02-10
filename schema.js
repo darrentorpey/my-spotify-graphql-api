@@ -8,6 +8,7 @@ export default `
     ): [Track]
     lyric_sheet(url: String, id: String): LyricSheet
     lyric_sheets(id: String): [LyricSheet]
+    recent_tracks: [Track]
   }
 
   input TrackFilter {

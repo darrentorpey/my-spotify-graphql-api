@@ -1,6 +1,10 @@
 import striptags from 'striptags'
+import fetch from 'node-fetch'
 
 import { scrapeUrl } from '../scraper.js'
+
+const API_BASE_URL = 'https://api.spotify.com/v1/'
+import SECRETS from '../../data/secrets.json'
 
 const songs = {
   '2Z1QZn3LGA3G0NsXdZ5NUY': [
@@ -71,4 +75,26 @@ export async function resolveLyricSheets(root, { id }) {
     title: sheet.title,
     source: sheet.source,
   }))
+}
+
+async function fetchJson(url, token) {
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+
+  return response.json()
+}
+
+async function fetchItems(apiPath, token) {
+  const results = await fetchJson(`${API_BASE_URL}${apiPath}`, token)
+  return { items: results.items, total: results.total }
+}
+
+export async function resolveRecentTracks() {
+  const recentItems = await fetchItems(`me/player/recently-played`, SECRETS.token)
+  // console.log(`recentItems`, recentItems)
+  // console.log(`recentItems.items[0].track`, recentItems.items[0].track)
+  return recentItems.items.map(item => item.track)
 }

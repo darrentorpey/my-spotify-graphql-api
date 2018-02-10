@@ -2,7 +2,7 @@ import { compact, flatten, uniqBy } from 'lodash-es'
 
 import playlists from './data/playlists.json'
 
-import { resolveLyrics, resolveLyricSheets } from './src/resolvers/lyrics'
+import { resolveLyrics, resolveLyricSheets, resolveRecentTracks } from './src/resolvers/lyrics'
 
 const compound = items => uniqBy(compact(flatten(items)), 'id')
 
@@ -131,6 +131,7 @@ const resolvers = {
     tracks: resolveTracks,
     lyric_sheet: resolveLyrics,
     lyric_sheets: resolveLyricSheets,
+    recent_tracks: resolveRecentTracks,
   },
   Track: {
     audio_features_summary: (track, args, context) => {
