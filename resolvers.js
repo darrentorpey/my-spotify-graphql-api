@@ -55,9 +55,13 @@ function filterTracks(tracks, { startsWith, having, title }) {
   return applyFilters(tracks, filters)
 }
 
-function getTracks(startsWith, having, title) {
+function getTracks() {
   return compound(
-    playlists.map(p => (p.tracks ? p.tracks.map(track => Object.assign(track, { playlists: [p.name] })) : p.tracks))
+    playlists.map(
+      p =>
+        // p.tracks ? p.tracks.map(track => Object.assign(track, { playlists: [p.name] })) : p.tracks
+        p.tracks ? p.tracks.map(track => ({ ...track, playlists: [p.name] })) : p.tracks
+    )
   )
 }
 
@@ -119,10 +123,10 @@ function afLabel(afValue, granularity = 'COARSE') {
   }
 }
 
-const audioFeaturesFieldResolver = feature => (audio_features, args, context) => {
+const audioFeaturesFieldResolver = feature => (audioFeatures, args, context) => {
   const { afGranularity } = context
 
-  return afLabel(audio_features[feature], afGranularity)
+  return afLabel(audioFeatures[feature], afGranularity)
 }
 
 const resolvers = {

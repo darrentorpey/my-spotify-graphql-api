@@ -5,6 +5,9 @@
   "main": "main.js",
   "dependencies": {
     "@std/esm": "0.20.0",
+    "eslint": "4.17.0",
+    "eslint-config-prettier": "2.9.0",
+    "eslint-plugin-prettier": "2.6.0",
     "express-graphql": "0.6.11",
     "graphql": "0.12.3",
     "graphql-tools": "2.20.1",
