@@ -5,6 +5,7 @@
   "main": "main.js",
   "dependencies": {
     "@std/esm": "0.20.0",
+    "axios": "0.17.1",
     "eslint": "4.17.0",
     "eslint-config-prettier": "2.9.0",
     "eslint-plugin-prettier": "2.6.0",
