@@ -1,9 +1,9 @@
 import { compact, flatten, uniqBy } from 'lodash-es'
 
-import playlists from './data/playlists.json'
-
 import { resolveLyrics, resolveLyricSheets } from './src/resolvers/lyrics'
 import { resolveRecentTracks } from './src/resolvers/spotify'
+
+const playlists = []
 
 const compound = items => uniqBy(compact(flatten(items)), 'id')
 
