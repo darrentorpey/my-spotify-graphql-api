@@ -1,6 +1,6 @@
 export default `
   type Query {
-    playlists: [Playlist]
+    myPlaylists(offset: Int): [Playlist]
     tracks(
       startsWith: String
       having: TrackFilter
@@ -26,18 +26,27 @@ export default `
   A playlist
   """
   type Playlist {
+    id: String
+    href: String
+    owner: Owner
     name: String
     tracks: [Track]
   }
 
+  type Owner {
+    display_name: String
+    id: String
+  }
+
   type Track {
     id: String
+    audio_features: AudioFeatures
+    audio_features_summary(granularity: Granularity): AudioFeaturesSummary
     added_at: String
     name: String
     artists: [Artist]
     playlists: [String]
-    audio_features: AudioFeatures
-    audio_features_summary(granularity: Granularity): AudioFeaturesSummary
+    track_number: Int
   }
 
   """
