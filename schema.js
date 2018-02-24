@@ -11,6 +11,13 @@ export default `
     recent_tracks: [Track]
   }
 
+  type Mutation {
+    editSongNotebook(
+      songId: String
+      text: String!
+    ): Commentary
+  }
+
   input TrackFilter {
     danceability: Float
     valence: Float
@@ -20,6 +27,11 @@ export default `
     text: String
     title: String
     source: String
+  }
+
+  type Commentary {
+    songId: String
+    text: String
   }
 
   """

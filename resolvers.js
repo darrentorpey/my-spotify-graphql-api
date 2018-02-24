@@ -1,5 +1,6 @@
 import { resolveLyrics, resolveLyricSheets } from './src/resolvers/lyrics'
 import { resolveRecentTracks, resolveMyPlaylists, resolveTracks } from './src/resolvers/spotify'
+import { createResource, updateResource, getItems } from './src/jsonStore'
 
 function afLabelCoarse(afValue) {
   if (afValue >= 0.7) {
@@ -64,6 +65,28 @@ const resolvers = {
     lyric_sheet: resolveLyrics,
     lyric_sheets: resolveLyricSheets,
     recent_tracks: resolveRecentTracks,
+  },
+  Mutation: {
+    async editSongNotebook(_, { songId, text }) {
+      const items = await getItems('songNotebook', {
+        songId,
+      })
+      const existing = items[0]
+
+      if (existing) {
+        await updateResource('songNotebook', existing.id, {
+          songId,
+          text,
+        })
+      } else {
+        await createResource('songNotebook', {
+          songId,
+          text,
+        })
+      }
+
+      return { text, songId }
+    },
   },
   Track: {
     audio_features_summary: (track, args, context) => {
