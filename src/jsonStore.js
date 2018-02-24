@@ -41,3 +41,17 @@ export async function updateResource(resourceName, resourceId, data) {
     data,
   })
 }
+
+export async function upsertResource(resourceName, data, key = 'id') {
+  const [{ id } = {}] = await getItems(resourceName, {
+    [key]: data[key],
+  })
+
+  if (id) {
+    await updateResource(resourceName, id, data)
+  } else {
+    await createResource(resourceName, data)
+  }
+
+  return data
+}

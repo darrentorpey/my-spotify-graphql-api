@@ -65,11 +65,6 @@ function filterTracks(tracks, { startsWith, having, title }) {
   return applyFilters(tracks, filters)
 }
 
-function debugResponse(resp) {
-  console.log(`resp:\n`)
-  console.log(resp)
-}
-
 function trackFromPlaylistTrack(playlistTrack) {
   // console.log('playlistTrack.added_at', playlistTrack.added_at)
   const artists = playlistTrack.track.artists
